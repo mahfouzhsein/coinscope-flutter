@@ -6,6 +6,7 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/app_logo.dart';
 import '../../../core/widgets/async_widgets.dart';
+import '../../../core/widgets/responsive_page.dart';
 import '../../../core/widgets/surface_card.dart';
 import '../../../core/widgets/typography.dart';
 import '../../preferences/application/preferences_provider.dart';
@@ -40,19 +41,21 @@ class _CoinDetailScreenState extends ConsumerState<CoinDetailScreen> {
             child: Divider(height: 1),
           ),
         ),
-        body: preferences.when(
-          loading: () => const Padding(
-            padding: EdgeInsets.all(20),
-            child: LoadingCard(lines: 8),
-          ),
-          error: (error, _) => Padding(
-            padding: const EdgeInsets.all(20),
-            child: ErrorCard(
-              message: error.toString(),
-              onRetry: () => ref.invalidate(preferencesProvider),
+        body: ResponsivePage(
+          child: preferences.when(
+            loading: () => const Padding(
+              padding: EdgeInsets.all(20),
+              child: LoadingCard(lines: 8),
             ),
+            error: (error, _) => Padding(
+              padding: const EdgeInsets.all(20),
+              child: ErrorCard(
+                message: error.toString(),
+                onRetry: () => ref.invalidate(preferencesProvider),
+              ),
+            ),
+            data: (value) => _buildDetail(value.currency),
           ),
-          data: (value) => _buildDetail(value.currency),
         ),
       ),
     );

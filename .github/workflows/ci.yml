@@ -1,4 +1,4 @@
-name: Mobile CI
+name: Cross-platform CI
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  test-and-build:
+  verify-and-build-android:
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
@@ -44,17 +44,75 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Publish rolling Android demo
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Windows demo
+        run: flutter build windows --release
+
+      - name: Package Windows demo
+        shell: pwsh
+        run: >-
+          Compress-Archive
+          -Path "build/windows/x64/runner/Release/*"
+          -DestinationPath "CoinScope-Windows.zip"
+          -Force
+
+      - name: Upload Windows demo
+        uses: actions/upload-artifact@v4
+        with:
+          name: coinscope-windows-demo
+          path: CoinScope-Windows.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-demo:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [verify-and-build-android, build-windows]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Download Android demo
+        uses: actions/download-artifact@v4
+        with:
+          name: coinscope-android-demo
+          path: release/android
+
+      - name: Download Windows demo
+        uses: actions/download-artifact@v4
+        with:
+          name: coinscope-windows-demo
+          path: release/windows
+
+      - name: Publish rolling demo builds
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp build/app/outputs/flutter-apk/app-release.apk CoinScope-Android.apk
+          cp release/android/app-release.apk CoinScope-Android.apk
+          cp release/windows/CoinScope-Windows.zip CoinScope-Windows.zip
           if gh release view android-demo >/dev/null 2>&1; then
-            gh release upload android-demo CoinScope-Android.apk --clobber
+            gh release upload android-demo CoinScope-Android.apk CoinScope-Windows.zip --clobber
+            gh release edit android-demo \
+              --title "CoinScope Demo Builds" \
+              --notes "Recruiter-ready Android and Windows builds generated from the verified main branch."
           else
-            gh release create android-demo CoinScope-Android.apk \
+            gh release create android-demo CoinScope-Android.apk CoinScope-Windows.zip \
               --target "$GITHUB_SHA" \
-              --title "CoinScope Android Demo" \
-              --notes "Recruiter-ready Android build generated from the verified main branch."
+              --title "CoinScope Demo Builds" \
+              --notes "Recruiter-ready Android and Windows builds generated from the verified main branch."
           fi
