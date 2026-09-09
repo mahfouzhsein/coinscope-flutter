@@ -102,6 +102,7 @@ jobs:
       - name: Publish rolling demo builds
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           cp release/android/app-release.apk CoinScope-Android.apk
           cp release/windows/CoinScope-Windows.zip CoinScope-Windows.zip
