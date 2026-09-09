@@ -2,6 +2,8 @@
 
 A cross-platform Flutter companion to the [original CoinScope web app](https://coinscope-kappa.vercel.app/). It preserves the original product's dark slate surfaces, cyan-to-indigo identity, compact market cards, and clear gain/loss language while adapting the experience to Android, iOS, Windows, and the web.
 
+[Open the Flutter web demo](https://coinscope-flutter.vercel.app/)
+
 [Download the latest Android demo APK](https://github.com/mahfouzhsein/coinscope-flutter/releases/latest/download/CoinScope-Android.apk)
 
 [Download the latest Windows demo ZIP](https://github.com/mahfouzhsein/coinscope-flutter/releases/latest/download/CoinScope-Windows.zip)
