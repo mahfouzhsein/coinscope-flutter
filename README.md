@@ -1,6 +1,6 @@
 # CoinScope Flutter
 
-A native Flutter companion to the [CoinScope web app](https://coinscope-kappa.vercel.app/). It preserves the original product's dark slate surfaces, cyan-to-indigo identity, compact market cards, and clear gain/loss language while adapting the experience to Android, iOS, and Windows navigation.
+A cross-platform Flutter companion to the [original CoinScope web app](https://coinscope-kappa.vercel.app/). It preserves the original product's dark slate surfaces, cyan-to-indigo identity, compact market cards, and clear gain/loss language while adapting the experience to Android, iOS, Windows, and the web.
 
 [Download the latest Android demo APK](https://github.com/mahfouzhsein/coinscope-flutter/releases/latest/download/CoinScope-Android.apk)
 
@@ -32,7 +32,7 @@ flowchart TD
 
 ## Run locally
 
-Install the current stable Flutter SDK, select an Android device/emulator, iOS simulator, or Windows desktop, then run:
+Install the current stable Flutter SDK, select an Android device/emulator, iOS simulator, Windows desktop, or Chrome, then run:
 
 ```bash
 flutter pub get
@@ -50,6 +50,8 @@ flutter test
 
 Every push is checked by GitHub Actions, produces Android and Windows artifacts, and refreshes the installable `android-demo` release. Pushing a version tag such as `v1.0.0`, or manually running the **Publish versioned demo** workflow, creates a versioned GitHub Release with both builds.
 
+The Flutter web build is also produced on every push. Its presentation is intentionally constrained to a centered 430-pixel phone canvas, with web-only Android and Windows download actions displayed below the app header.
+
 Android may ask the reviewer to allow installation from the browser or file manager. iOS distribution requires Apple signing; TestFlight can be added later without changing the Flutter application architecture.
 
 For Windows, extract the whole ZIP before opening `CoinScope.exe`; the adjacent DLL and `data` files are required by Flutter. The demo is not code-signed, so Windows SmartScreen may show an unrecognized-app warning.
@@ -59,5 +61,6 @@ For Windows, extract the whole ZIP before opening `CoinScope.exe`; the adjacent 
 - Android application ID: `com.husseinmahfouz.coinscope`
 - iOS bundle ID: `com.husseinmahfouz.coinscope`
 - Windows executable: `CoinScope.exe`
+- Web app: centered phone-width Flutter canvas
 
 This project is independently maintained from the CoinScope web repository.

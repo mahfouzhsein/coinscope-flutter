@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/app_logo.dart';
 import '../../../core/widgets/responsive_page.dart';
+import '../../../core/widgets/web_download_banner.dart';
 import '../../market/presentation/markets_screen.dart';
 import '../../market/presentation/overview_screen.dart';
 import '../../watchlist/presentation/watchlist_screen.dart';
@@ -30,12 +32,19 @@ class _AppShellState extends State<AppShell> {
           ),
         ),
         body: ResponsivePage(
-          child: IndexedStack(
-            index: _index,
-            children: const [
-              OverviewScreen(),
-              MarketsScreen(),
-              WatchlistScreen(),
+          child: Column(
+            children: [
+              if (kIsWeb) const WebDownloadBanner(),
+              Expanded(
+                child: IndexedStack(
+                  index: _index,
+                  children: const [
+                    OverviewScreen(),
+                    MarketsScreen(),
+                    WatchlistScreen(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

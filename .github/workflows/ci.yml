@@ -33,6 +33,17 @@ jobs:
       - name: Test
         run: flutter test
 
+      - name: Build web demo
+        run: flutter build web --release
+
+      - name: Upload web demo
+        uses: actions/upload-artifact@v4
+        with:
+          name: coinscope-web-demo
+          path: build/web
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Build Android demo
         run: flutter build apk --release
 
