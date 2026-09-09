@@ -2,6 +2,8 @@
 
 A native Flutter companion to the [CoinScope web app](https://coinscope-kappa.vercel.app/). It preserves the original product's dark slate surfaces, cyan-to-indigo identity, compact market cards, and clear gain/loss language while adapting the experience to Android and iOS navigation.
 
+[Download the latest Android demo APK](https://github.com/mahfouzhsein/coinscope-flutter/releases/latest/download/CoinScope-Android.apk)
+
 ## What it includes
 
 - Global market cap, 24-hour volume, Bitcoin dominance, and active coin metrics
@@ -44,7 +46,7 @@ flutter test
 
 ## Recruiter demo builds
 
-Every push is checked by GitHub Actions and produces an Android APK artifact. Pushing a version tag such as `v1.0.0`, or manually running the **Publish Android demo** workflow, creates a GitHub Release with an installable APK.
+Every push is checked by GitHub Actions, produces an APK artifact, and refreshes the installable `android-demo` release. Pushing a version tag such as `v1.0.0`, or manually running the **Publish Android demo** workflow, creates a versioned GitHub Release.
 
 Android may ask the reviewer to allow installation from the browser or file manager. iOS distribution requires Apple signing; TestFlight can be added later without changing the Flutter application architecture.
 

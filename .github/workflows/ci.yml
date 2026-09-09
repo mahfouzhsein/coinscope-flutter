@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test-and-build:
@@ -43,3 +43,18 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish rolling Android demo
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk CoinScope-Android.apk
+          if gh release view android-demo >/dev/null 2>&1; then
+            gh release upload android-demo CoinScope-Android.apk --clobber
+          else
+            gh release create android-demo CoinScope-Android.apk \
+              --target "$GITHUB_SHA" \
+              --title "CoinScope Android Demo" \
+              --notes "Recruiter-ready Android build generated from the verified main branch."
+          fi
